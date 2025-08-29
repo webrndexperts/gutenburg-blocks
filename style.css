@@ -1,0 +1,103 @@
+.recipe-list { max-width: 1200px; margin: 32px auto; padding: 0 16px; }
+.recipe-list__controls { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:20px; }
+.recipe-list__controls input[type=text]{ flex:1 1 260px; padding:10px 12px; border:1px solid #ddd; border-radius:6px; }
+.recipe-list__controls select{ padding:10px 12px; border:1px solid #ddd; border-radius:6px; min-width:160px; }
+.recipe-list__controls button{ padding:10px 16px; border:0; background:#111827; color:#fff; border-radius:6px; cursor:pointer; }
+.recipe-list__grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; }
+.recipe-card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,.04); transition:transform .2s ease, box-shadow .2s ease; }
+.recipe-card:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.08); }
+.recipe-card__thumb img{ width:100%; height:220px; object-fit:cover; display:block; }
+.recipe-card__title{ margin:12px 14px 6px; font-size:20px; line-height:1.2; }
+.recipe-card__title a{ color:#111827; text-decoration:none; }
+.recipe-card__meta{ margin:0 14px 6px; color:#ffb703; display:flex; gap:12px; align-items:center; font-size:14px; }
+.recipe-card__excerpt{ margin: 0 14px 14px; color:#4b5563; font-size:14px; min-height:56px; }
+.recipe-list__pagination{ margin-top:24px; text-align:center; }
+.recipe-list__pagination a, .recipe-list__pagination span{ display:inline-block; margin:0 4px; padding:8px 12px; border:1px solid #e5e7eb; border-radius:6px; text-decoration:none; color:#111827; }
+.recipe-list__pagination .current{ background:#111827; color:#fff; border-color:#111827; }
+.wp-block-my-plugin-testimonial-slider .swiper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.wp-block-my-plugin-testimonial-slider .swiper-slide {
+    position: relative;
+}
+
+.wp-block-my-plugin-testimonial-slider .recipe-slide-image img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    display: block;
+}
+
+.wp-block-my-plugin-testimonial-slider .slide-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 16px;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 70%);
+    color: #fff;
+    z-index: 2;
+}
+
+.wp-block-my-plugin-testimonial-slider .slide-title {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    line-height: 1.2;
+}
+
+.wp-block-my-plugin-testimonial-slider .slide-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+    opacity: 0.95;
+}
+
+.wp-block-my-plugin-testimonial-slider .slide-rating {
+    color: #ffd166;
+}
+
+.wp-block-my-plugin-testimonial-slider .slide-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.wp-block-my-plugin-testimonial-slider .slide-actions .rate-star,
+.wp-block-my-plugin-testimonial-slider .slide-actions .recipe-like {
+    color: #ffd166;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    width: 22px;
+    text-align: center;
+}
+.wp-block-my-plugin-testimonial-slider .slide-actions .rate-star { color: #ffd166; opacity: .85; }
+.wp-block-my-plugin-testimonial-slider .slide-actions .rate-star:hover { opacity: 1; }
+.wp-block-my-plugin-testimonial-slider .slide-actions .rate-star[aria-disabled="true"] { pointer-events: none; opacity: .6; }
+
+.wp-block-my-plugin-testimonial-slider .slide-readmore {
+    display:inline-block;
+    margin-top:10px;
+    padding:6px 10px;
+    background:rgba(255,255,255,0.15);
+    color:#fff;
+    border-radius:6px;
+    text-decoration:none;
+}
+.wp-block-my-plugin-testimonial-slider .slide-readmore:hover { background:rgba(255,255,255,0.25); }
+
+.wp-block-my-plugin-testimonial-slider .slide-actions .recipe-like { color: #2b8a3e; }
+.wp-block-my-plugin-testimonial-slider .slide-actions .recipe-like::before { content: '👍 '; }
+
+.wp-block-my-plugin-testimonial-slider .slide-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+.wp-block-my-plugin-testimonial-slider img {
+	width: 100vh;
+	height: 100vh;
+}

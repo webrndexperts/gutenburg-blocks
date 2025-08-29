@@ -1,0 +1,111 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 2,
+    "name": "my-plugin/recipe-slider",
+    "title": "Recipe Slider",
+    "category": "media",
+    "icon": "format-quote",
+    "description": "A responsive slider for displaying recipes",
+    "editorScript": "file:./build/index.js",
+    "style": "file:./build/style-index.css",
+    "script": "file:./build/frontend.js",
+    "render": "file:./render.php",
+    "attributes": {
+        "postsPerPage": {
+            "type": "number",
+            "default": 6
+        },
+        "order": {
+            "type": "string",
+            "default": "DESC"
+        },
+        "orderby": {
+            "type": "string",
+            "default": "date"
+        },
+        "ratingOrder": {
+            "type": "string",
+            "default": "none"
+        },
+        "recipeCategory": {
+            "type": "array",
+            "default": []
+        },
+        "cuisineType": {
+            "type": "array",
+            "default": []
+        },
+        "dietaryRestriction": {
+            "type": "array",
+            "default": []
+        },
+        "showTitle": {
+            "type": "boolean",
+            "default": true
+        },
+        "showExcerpt": {
+            "type": "boolean",
+            "default": true
+        },
+        "useExcerpt": {
+            "type": "boolean",
+            "default": true
+        },
+        "slidesPerView": {
+            "type": "number",
+            "default": 1
+        },
+        "delay": {
+            "type": "number",
+            "default": 1000
+        },
+        "loop": {
+            "type": "boolean",
+            "default": false
+        },
+        "autoplay": {
+            "type": "boolean",
+            "default": false
+        },
+        "showArrows": {
+            "type": "boolean",
+            "default": true
+        },
+        "showDots": {
+            "type": "boolean",
+            "default": true
+        },
+        "breakpoints": {
+            "type": "object",
+            "default": {}
+        },
+        "showPrepTime": {
+            "type": "boolean",
+            "default": true
+        },
+        "showDifficulty": {
+            "type": "boolean",
+            "default": true
+        },
+        "showRatings": {
+            "type": "boolean",
+            "default": false
+        },
+        "colorText": {
+            "type": "string",
+            "default": ""
+        },
+        "colorBackground": {
+            "type": "string",
+            "default": ""
+        },
+        "spacing": {
+            "type": "number",
+            "default": 16
+        },
+        "borderRadius": {
+            "type": "number",
+            "default": 8
+        }
+    }
+}
