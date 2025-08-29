@@ -1,16 +1,42 @@
 <?php
+/**
+ * Exit if accessed directly.
+ */
 if (!defined('ABSPATH')) {
     exit;
 }
 
+/**
+ * Handles the [recipe_list] shortcode functionality.
+ * 
+ * This class provides a flexible shortcode to display a grid of recipes
+ * with filtering, sorting, and pagination capabilities.
+ * 
+ * @package    RecipeSlider
+ * @subpackage Includes
+ * @since      1.0.0
+ */
 class Recipe_List_Shortcode
 {
 
+    /**
+     * Registers the shortcode with WordPress.
+     * 
+     * @since 1.0.0
+     * @return void
+     */
     public function register()
     {
         add_shortcode('recipe_list', array($this, 'render'));
     }
 
+    /**
+     * Processes and validates shortcode attributes.
+     * 
+     * @since 1.0.0
+     * @param array $atts Shortcode attributes.
+     * @return array Processed attributes with defaults.
+     */
     private function get_atts($atts)
     {
         $defaults = array(
@@ -35,6 +61,16 @@ class Recipe_List_Shortcode
         return $atts;
     }
 
+    /**
+     * Renders the recipe list shortcode output.
+     * 
+     * Handles the display of the recipe grid, including processing of
+     * search, filter, and sort parameters.
+     * 
+     * @since 1.0.0
+     * @param array $atts Shortcode attributes.
+     * @return string HTML output of the recipe list.
+     */
     public function render($atts)
     {
         $atts = $this->get_atts($atts);

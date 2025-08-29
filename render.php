@@ -1,4 +1,5 @@
 <?php
+// Parse block attributes with defaults
 $posts_per_page = isset($attributes['postsPerPage']) ? (int) $attributes['postsPerPage'] : 6;
 $order = !empty($attributes['order']) ? $attributes['order'] : 'DESC';
 $orderby = !empty($attributes['orderby']) ? $attributes['orderby'] : 'date';
@@ -25,6 +26,7 @@ $color_bg = !empty($attributes['colorBackground']) ? $attributes['colorBackgroun
 $spacing = isset($attributes['spacing']) ? (int) $attributes['spacing'] : 16;
 $radius = isset($attributes['borderRadius']) ? (int) $attributes['borderRadius'] : 8;
 
+// Set up taxonomy query based on selected terms
 $tax_query = array();
 if (!empty($recipe_category)) {
     $tax_query[] = array(
@@ -51,6 +53,11 @@ if (count($tax_query) > 1) {
     $tax_query['relation'] = 'AND';
 }
 
+/**
+ * Set up the main query arguments.
+ *
+ * @var array $query_args The main query arguments.
+ */
 $query_args = array(
     'post_type' => 'recipe',
     'posts_per_page' => $posts_per_page,
@@ -82,6 +89,7 @@ $wrapper_attributes = get_block_wrapper_attributes([
 $recipes = new WP_Query($query_args);
 ?>
 
+<!-- Recipe Slider Container -->
 <div <?php echo $wrapper_attributes; ?>>
     <div class="swiper">
         <div class="swiper-wrapper">

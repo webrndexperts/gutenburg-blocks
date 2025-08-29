@@ -1,22 +1,40 @@
 <?php
 /**
- * Plugin Name: Recipe Slider
+ * Recipe Carousel - A WordPress Plugin
+ * 
+ * @author      Ansuman Satapathy
+ * @copyright   2023 RND Experts
+ * @license     GPL-2.0+
+ * 
+ * @wordpress-plugin
+ * Plugin Name: Recipe Carousel
+ * Plugin URI:  https://rndexperts.com/plugins/recipe-carousel
  * Description: A comprehensive recipe management system with custom post types, taxonomies, and Gutenberg blocks.
- * Version: 1.0.0
+ * Version:     1.0.0
+ * Author:      Ansuman Satapathy
+ * Author URI:  https://rndexperts.com
  * Text Domain: recipe-slider
- * Domain Path: /languages
- * Author: Ansuman Satapathy
- * Author URI: https://rndexperts.com
- * Text Domain: recipe-platform
  * Domain Path: /languages
  * Requires at least: 5.8
  * Requires PHP: 7.4
+ * License:     GPL-2.0+
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
+// Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
 }
 
+/**
+ * Initialize the Recipe Slider plugin.
+ * 
+ * This function sets up the core functionality of the plugin including
+ * custom post types, taxonomies, and meta boxes.
+ * 
+ * @since 1.0.0
+ * @return void
+ */
 function recipe_slider_init()
 {
     add_action('enqueue_block_assets', 'recipe_slider_enqueue_swiper');
@@ -46,6 +64,14 @@ function recipe_slider_init()
     $sc->register();
 }
 
+/**
+ * Enqueue Swiper and plugin styles/scripts.
+ * 
+ * Loads the Swiper library and custom plugin assets.
+ * 
+ * @since 1.0.0
+ * @return void
+ */
 function recipe_slider_enqueue_swiper()
 {
     wp_enqueue_style('swiper-css', 'https://unpkg.com/swiper/swiper-bundle.min.css', [], '8.4.5');
@@ -53,18 +79,16 @@ function recipe_slider_enqueue_swiper()
 
     wp_enqueue_style('recipe-slider-styles', plugins_url('style.css', __FILE__), [], '1.0.1');
 
-    // Ajax for like/rating
     wp_register_script('recipe-slider-ajax', plugins_url('public/recipe-slider-ajax.js', __FILE__), array('jquery'), '1.0.0', true);
     wp_localize_script('recipe-slider-ajax', 'RecipeSliderAjax', array(
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('recipe_slider_nonce'),
-        'isUser' => is_user_logged_in() ? true : false, // ✅ will be TRUE for any logged-in user
+        'isUser' => is_user_logged_in() ? true : false,
     ));
     wp_enqueue_script('recipe-slider-ajax');
 
-    // Ajax for recipe list (different object to avoid overwriting RecipeSliderAjax)
     wp_register_script('recipe-list-ajax', plugins_url('public/recipe-list-ajax.js', __FILE__), array(), '1.0.0', true);
-    wp_localize_script('recipe-list-ajax', 'RecipeListAjax', array( // 👈 changed object name
+    wp_localize_script('recipe-list-ajax', 'RecipeListAjax', array(
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('recipe_slider_nonce'),
     ));
@@ -73,6 +97,15 @@ function recipe_slider_enqueue_swiper()
 
 add_action('init', 'recipe_slider_init');
 
+/**
+ * Plugin activation handler.
+ * 
+ * Sets up the database table for recipe feedback and flushes rewrite rules.
+ * 
+ * @since 1.0.0
+ * @global wpdb $wpdb WordPress database abstraction object.
+ * @return void
+ */
 function recipe_slider_activate()
 {
     recipe_slider_init();
@@ -95,6 +128,14 @@ function recipe_slider_activate()
     flush_rewrite_rules();
 }
 
+/**
+ * Plugin deactivation handler.
+ * 
+ * Cleans up rewrite rules on plugin deactivation.
+ * 
+ * @since 1.0.0
+ * @return void
+ */
 function recipe_slider_deactivate()
 {
     flush_rewrite_rules();
@@ -103,9 +144,16 @@ function recipe_slider_deactivate()
 register_activation_hook(__FILE__, 'recipe_slider_activate');
 register_deactivation_hook(__FILE__, 'recipe_slider_deactivate');
 
-// Include REST API functionality
 require_once plugin_dir_path(__FILE__) . 'includes/rest-api.php';
 
+/**
+ * Handle AJAX requests for recipe reactions (like/dislike).
+ * 
+ * Processes like/dislike actions from the frontend and updates the database.
+ * 
+ * @since 1.0.0
+ * @return void
+ */
 function handle_recipe_slider_react()
 {
     check_ajax_referer('recipe_slider_nonce');
@@ -134,6 +182,15 @@ function handle_recipe_slider_react()
 add_action('wp_ajax_recipe_slider_react', 'handle_recipe_slider_react');
 add_action('wp_ajax_nopriv_recipe_slider_react', 'handle_recipe_slider_react');
 
+/**
+ * Handle AJAX requests for recipe ratings.
+ * 
+ * Processes rating submissions and updates the average rating in the database.
+ * 
+ * @since 1.0.0
+ * @global wpdb $wpdb WordPress database abstraction object.
+ * @return void
+ */
 function handle_recipe_slider_rate()
 {
     check_ajax_referer('recipe_slider_nonce');
@@ -162,16 +219,22 @@ add_action('wp_ajax_nopriv_recipe_slider_rate', 'handle_recipe_slider_rate');
 
 add_action('wp_ajax_recipe_list_query', 'recipe_slider_ajax_recipe_list');
 add_action('wp_ajax_nopriv_recipe_list_query', 'recipe_slider_ajax_recipe_list');
+/**
+ * AJAX handler for recipe list queries.
+ * 
+ * Processes AJAX requests for filtering and displaying recipes.
+ * 
+ * @since 1.0.0
+ * @return void
+ */
 function recipe_slider_ajax_recipe_list() {
     check_ajax_referer('recipe_slider_nonce');
     
-    // Get and sanitize parameters
     $per_page = isset($_POST['per_page']) ? (int) $_POST['per_page'] : 9;
     $page = isset($_POST['rl_page']) ? (int) $_POST['rl_page'] : 1;
     $search = isset($_POST['s']) ? sanitize_text_field(wp_unslash($_POST['s'])) : '';
     $sort = isset($_POST['rl_sort']) ? sanitize_text_field($_POST['rl_sort']) : 'date_desc';
     
-    // Handle taxonomy terms
     $cat = isset($_POST['rl_cat']) ? 
         (is_array($_POST['rl_cat']) ? array_map('sanitize_text_field', $_POST['rl_cat']) : [sanitize_text_field($_POST['rl_cat'])]) : [];
         
@@ -181,7 +244,6 @@ function recipe_slider_ajax_recipe_list() {
     $die = isset($_POST['rl_die']) ? 
         (is_array($_POST['rl_die']) ? array_map('sanitize_text_field', $_POST['rl_die']) : [sanitize_text_field($_POST['rl_die'])]) : [];
 
-    // Build taxonomy query
     $tax_query = [];
     
     if (!empty($cat)) {
@@ -211,22 +273,19 @@ function recipe_slider_ajax_recipe_list() {
         ];
     }
     
-    // Set relation if we have multiple tax queries
     if (count($tax_query) > 1) {
         $tax_query['relation'] = 'AND';
     }
 
-    // Base query arguments
     $args = array(
         'post_type'      => 'recipe',
         'posts_per_page' => max(1, min(24, $per_page)),
         'paged'          => max(1, $page),
         'post_status'    => 'publish',
-        'no_found_rows'  => false, // Important for pagination
-        's'              => $search, // Search term
+        'no_found_rows'  => false, 
+        's'              => $search,
     );
     
-    // Add taxonomy query if we have any taxonomies
     if (!empty($tax_query)) {
         $args['tax_query'] = $tax_query;
     }
@@ -269,7 +328,6 @@ function recipe_slider_ajax_recipe_list() {
             $args['order'] = 'DESC';
     }
 
-    // Run the query
     $recipes_query = new WP_Query($args);
     
     ob_start();
@@ -334,7 +392,7 @@ function recipe_slider_ajax_recipe_list() {
             <?php
         endwhile;
         
-        echo '</div>'; // Close .recipe-grid
+        echo '</div>'; 
     else :
         ?>
         <div class="no-recipes-found">
@@ -345,11 +403,9 @@ function recipe_slider_ajax_recipe_list() {
     
     wp_reset_postdata();
     $html = ob_get_clean();
-
-    // Generate pagination
     $pagination = '';
     if ($recipes_query->max_num_pages > 1) {
-        $big = 999999999; // Need an unlikely integer
+        $big = 999999999;
         $pagination = paginate_links(array(
             'base'      => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
             'format'    => '?rl_page=%#%',

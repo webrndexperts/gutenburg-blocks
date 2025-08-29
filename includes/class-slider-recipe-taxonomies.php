@@ -1,11 +1,35 @@
 <?php
+/**
+ * Exit if accessed directly.
+ */
 if (!defined('ABSPATH')) {
 	exit;
 }
 
+/**
+ * Handles the registration and management of custom taxonomies for the Recipe post type.
+ * 
+ * This class is responsible for defining and registering the following taxonomies:
+ * - Recipe Categories (hierarchical)
+ * - Cuisine Types (non-hierarchical)
+ * - Dietary Restrictions (non-hierarchical)
+ * 
+ * @package    RecipeSlider
+ * @subpackage Includes
+ * @since      1.0.0
+ */
 class Slider_Recipe_Taxonomies
 {
 
+	/**
+	 * Registers all taxonomies for the Recipe post type.
+	 * 
+	 * This method serves as an entry point to register all custom taxonomies
+	 * used by the Recipe post type.
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
 	public function register_taxonomies()
 	{
 		$this->register_recipe_category_taxonomy();
@@ -13,6 +37,15 @@ class Slider_Recipe_Taxonomies
 		$this->register_dietary_restriction_taxonomy();
 	}
 
+	/**
+	 * Registers the Recipe Category taxonomy.
+	 * 
+	 * This is a hierarchical taxonomy (like categories) used to organize recipes
+	 * into different categories such as Appetizers, Main Courses, etc.
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
 	private function register_recipe_category_taxonomy()
 	{
 		if (taxonomy_exists('recipe_category')) {
@@ -61,6 +94,15 @@ class Slider_Recipe_Taxonomies
 		}
 	}
 
+	/**
+	 * Registers the Cuisine Type taxonomy.
+	 * 
+	 * This is a non-hierarchical taxonomy (like tags) used to classify recipes
+	 * by their regional cuisine type (e.g., Italian, Mexican, Chinese).
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
 	private function register_cuisine_type_taxonomy()
 	{
 		if (taxonomy_exists('cuisine_type')) {
@@ -103,6 +145,15 @@ class Slider_Recipe_Taxonomies
 		}
 	}
 
+	/**
+	 * Registers the Dietary Restriction taxonomy.
+	 * 
+	 * This is a non-hierarchical taxonomy used to tag recipes with dietary
+	 * considerations (e.g., Vegan, Gluten-Free, Keto).
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
 	private function register_dietary_restriction_taxonomy()
 	{
 		if (taxonomy_exists('dietary_restriction')) {

@@ -1,16 +1,33 @@
 <?php
+/**
+ * Exit if accessed directly.
+ */
 if (!defined('ABSPATH')) {
 	exit;
 }
 
 /**
- * Class Slider_Recipe_Post_Type
+ * Handles the registration and management of the Recipe custom post type.
+ * 
+ * This class is responsible for defining the Recipe post type, its labels,
+ * and its behavior within the WordPress admin and frontend.
+ * 
+ * @package    RecipeSlider
+ * @subpackage Includes
+ * @since      1.0.0
  */
 class Slider_Recipe_Post_Type
 {
 
 	/**
-	 * Register the Recipe custom post type (guarded to avoid double-registration).
+	 * Registers the Recipe custom post type.
+	 * 
+	 * This method sets up the labels, arguments, and registers the 'recipe' post type
+	 * with WordPress. It includes proper localization support and registers the post type
+	 * with the Gutenberg editor.
+	 * 
+	 * @since 1.0.0
+	 * @return void
 	 */
 	public function register_post_type()
 	{

@@ -1,11 +1,37 @@
 <?php
+/**
+ * Exit if accessed directly.
+ */
 if (!defined('ABSPATH')) {
 	exit;
 }
 
+/**
+ * Handles the registration of custom meta fields for the Recipe post type.
+ * 
+ * This class is responsible for registering all custom meta fields used by the Recipe
+ * post type, including their schema and access control settings for the REST API.
+ * 
+ * @package    RecipeSlider
+ * @subpackage Includes
+ * @since      1.0.0
+ */
 class Slider_Recipe_Meta_Registry
 {
 
+	/**
+	 * Registers all custom meta fields for the Recipe post type.
+	 * 
+	 * This method sets up the registration of various meta fields including:
+	 * - Basic recipe information (prep time, cook time, servings)
+	 * - Recipe content (ingredients, instructions)
+	 * - Media (gallery)
+	 * - Nutrition information
+	 * - Rating and like/dislike functionality
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
 	public function register_meta()
 	{
 		$meta_args_number = array(

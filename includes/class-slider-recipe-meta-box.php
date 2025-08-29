@@ -1,22 +1,59 @@
 <?php
+/**
+ * Exit if accessed directly.
+ */
 if (!defined('ABSPATH')) {
 	exit;
 }
 
+/**
+ * Handles the creation and management of the Recipe meta box.
+ * 
+ * This class is responsible for rendering and saving the custom meta box
+ * that appears on the Recipe post type edit screen, allowing users to input
+ * additional recipe details like preparation time, ingredients, and nutrition information.
+ * 
+ * @package    RecipeSlider
+ * @subpackage Includes
+ * @since      1.0.0
+ */
 class Slider_Recipe_Meta_Box
 {
 
+	/**
+	 * Initializes hooks for the meta box.
+	 * 
+	 * Sets up the necessary WordPress hooks to add and save the meta box.
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
 	public function hooks()
 	{
 		add_action('add_meta_boxes', array($this, 'add_box'));
 		add_action('save_post_recipe', array($this, 'save'));
 	}
 
+	/**
+	 * Adds the meta box to the Recipe post type edit screen.
+	 * 
+	 * @since 1.0.0
+	 * @return void
+	 */
 	public function add_box()
 	{
 		add_meta_box('slider_recipe_meta', __('Recipe Details', 'recipe-slider'), array($this, 'render'), 'recipe', 'normal', 'high');
 	}
 
+	/**
+	 * Renders the meta box content.
+	 * 
+	 * Outputs the HTML for the meta box fields and populates them with saved values.
+	 * 
+	 * @since 1.0.0
+	 * @param WP_Post $post The post object being edited.
+	 * @return void
+	 */
 	public function render($post)
 	{
 		wp_nonce_field('slider_recipe_meta_save', 'slider_recipe_meta_nonce');
@@ -77,6 +114,15 @@ class Slider_Recipe_Meta_Box
 		<?php
 	}
 
+	/**
+	 * Saves the meta box data when the post is saved.
+	 * 
+	 * Validates and sanitizes the input before saving to the database.
+	 * 
+	 * @since 1.0.0
+	 * @param int $post_id The ID of the post being saved.
+	 * @return void
+	 */
 	public function save($post_id)
 	{
 		if (!isset($_POST['slider_recipe_meta_nonce']) || !wp_verify_nonce($_POST['slider_recipe_meta_nonce'], 'slider_recipe_meta_save')) {

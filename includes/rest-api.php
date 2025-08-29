@@ -3,7 +3,6 @@
  * Recipe Slider - Custom REST API Endpoints
  */
 
-// Exit if accessed directly
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -13,14 +12,12 @@ class Recipe_Slider_REST_API {
      * Register custom REST API routes
      */
     public static function register_routes() {
-        // Featured recipes endpoint
         register_rest_route('recipes/v1', '/featured', array(
             'methods'  => WP_REST_Server::READABLE,
             'callback' => array(__CLASS__, 'get_featured_recipes'),
             'permission_callback' => '__return_true'
         ));
 
-        // Search endpoint
         register_rest_route('recipes/v1', '/search', array(
             'methods'  => WP_REST_Server::READABLE,
             'callback' => array(__CLASS__, 'search_recipes'),
@@ -39,14 +36,12 @@ class Recipe_Slider_REST_API {
             )
         ));
 
-        // Categories endpoint
         register_rest_route('recipes/v1', '/categories', array(
             'methods'  => WP_REST_Server::READABLE,
             'callback' => array(__CLASS__, 'get_recipe_categories'),
             'permission_callback' => '__return_true'
         ));
 
-        // Rating endpoint
         register_rest_route('recipes/v1', '/recipe/(?P<id>\d+)/rate', array(
             'methods'  => WP_REST_Server::CREATABLE,
             'callback' => array(__CLASS__, 'rate_recipe'),
@@ -103,7 +98,6 @@ class Recipe_Slider_REST_API {
             'tax_query' => array()
         );
 
-        // Add category filter if provided
         if ($category = $request->get_param('category')) {
             $args['tax_query'][] = array(
                 'taxonomy' => 'recipe_category',
@@ -160,19 +154,15 @@ class Recipe_Slider_REST_API {
         $rating = $request->get_param('rating');
         $user_id = get_current_user_id();
 
-        // Verify post exists and is a recipe
         if (!get_post($post_id) || get_post_type($post_id) !== 'recipe') {
             return new WP_Error('invalid_recipe', 'Invalid recipe ID', array('status' => 404));
         }
 
-        // Get existing ratings
         $ratings = get_post_meta($post_id, '_recipe_ratings', true) ?: array();
         $ratings[$user_id] = $rating;
 
-        // Update post meta
         update_post_meta($post_id, '_recipe_ratings', $ratings);
 
-        // Calculate new average
         $average = array_sum($ratings) / count($ratings);
         update_post_meta($post_id, '_recipe_rating_avg', $average);
 
@@ -189,7 +179,6 @@ class Recipe_Slider_REST_API {
     private static function prepare_recipe_data($post_id) {
         $post = get_post($post_id);
         
-        // Get basic post data
         $data = array(
             'id' => $post_id,
             'title' => get_the_title($post_id),
@@ -203,12 +192,10 @@ class Recipe_Slider_REST_API {
             'meta' => array()
         );
 
-        // Get ACF fields if available
         if (function_exists('get_fields')) {
             $data['acf'] = get_fields($post_id);
         }
 
-        // Get categories
         $categories = get_the_terms($post_id, 'recipe_category');
         if ($categories && !is_wp_error($categories)) {
             $data['categories'] = array_map(function($cat) {
@@ -221,7 +208,6 @@ class Recipe_Slider_REST_API {
             }, $categories);
         }
 
-        // Get tags
         $tags = get_the_terms($post_id, 'recipe_tag');
         if ($tags && !is_wp_error($tags)) {
             $data['tags'] = array_map(function($tag) {
@@ -233,7 +219,6 @@ class Recipe_Slider_REST_API {
             }, $tags);
         }
 
-        // Get ratings
         $ratings = get_post_meta($post_id, '_recipe_ratings', true) ?: array();
         $average_rating = get_post_meta($post_id, '_recipe_rating_avg', true);
         
@@ -242,7 +227,6 @@ class Recipe_Slider_REST_API {
             'count' => count($ratings)
         );
 
-        // Get likes
         $likes = get_post_meta($post_id, '_recipe_likes', true);
         $data['likes'] = $likes ? (int) $likes : 0;
 
@@ -250,5 +234,5 @@ class Recipe_Slider_REST_API {
     }
 }
 
-// Initialize the REST API
+// Initializing the REST API
 add_action('rest_api_init', array('Recipe_Slider_REST_API', 'register_routes'));
